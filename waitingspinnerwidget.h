@@ -1,6 +1,9 @@
 /* Original Work Copyright (c) 2012-2014 Alexander Turkin
    Modified 2014 by William Hallatt
    Modified 2015 by Jacob Dawid
+   Modified 2018 by huxingyi
+   Modified 2024 by Harold
+
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
 the Software without restriction, including without limitation the rights to
@@ -22,28 +25,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 // Qt includes
-#include <QWidget>
-#include <QTimer>
 #include <QColor>
+#include <QTimer>
+#include <QWidget>
 
-class WaitingSpinnerWidget : public QWidget {
+class WaitingSpinnerWidget: public QWidget
+{
     Q_OBJECT
 public:
     /*! Constructor for "standard" widget behaviour - use this
    * constructor if you wish to, e.g. embed your widget in another. */
-    WaitingSpinnerWidget(QWidget *parent = 0,
-                         bool centerOnParent = true,
-                         bool disableParentWhenSpinning = true);
+    WaitingSpinnerWidget(QWidget* parent = 0, bool centerOnParent = true, bool disableParentWhenSpinning = true);
 
     /*! Constructor - use this constructor to automatically create a modal
    * ("blocking") spinner on top of the calling widget/window.  If a valid
    * parent widget is provided, "centreOnParent" will ensure that
    * QtWaitingSpinner automatically centres itself on it, if not,
    * "centreOnParent" is ignored. */
-    WaitingSpinnerWidget(Qt::WindowModality modality,
-                         QWidget *parent = 0,
-                         bool centerOnParent = true,
+    WaitingSpinnerWidget(Qt::WindowModality modality, QWidget* parent = 0, bool centerOnParent = true,
                          bool disableParentWhenSpinning = true);
+
+    Q_DISABLE_COPY(WaitingSpinnerWidget)
 
 public slots:
     void start();
@@ -60,16 +62,19 @@ public:
     void setLineWidth(int width);
     void setInnerRadius(int radius);
     void setText(QString text);
+    void setTextColor(QColor color);
 
-    QColor color();
-    qreal roundness();
-    qreal minimumTrailOpacity();
-    qreal trailFadePercentage();
-    qreal revolutionsPersSecond();
-    int numberOfLines();
-    int lineLength();
-    int lineWidth();
-    int innerRadius();
+    QColor color() const;
+    QString text() const;
+    QColor textColor() const;
+    qreal roundness() const;
+    qreal minimumTrailOpacity() const;
+    qreal trailFadePercentage() const;
+    qreal revolutionsPersSecond() const;
+    int numberOfLines() const;
+    int lineLength() const;
+    int lineWidth() const;
+    int innerRadius() const;
 
     bool isSpinning() const;
 
@@ -77,13 +82,11 @@ private slots:
     void rotate();
 
 protected:
-    void paintEvent(QPaintEvent *paintEvent);
+    void paintEvent(QPaintEvent* paintEvent) override;
 
 private:
-    static int lineCountDistanceFromPrimary(int current, int primary,
-                                            int totalNrOfLines);
-    static QColor currentLineColor(int distance, int totalNrOfLines,
-                                   qreal trailFadePerc, qreal minOpacity,
+    static int lineCountDistanceFromPrimary(int current, int primary, int totalNrOfLines);
+    static QColor currentLineColor(int distance, int totalNrOfLines, qreal trailFadePerc, qreal minOpacity,
                                    QColor color);
 
     void initialize();
@@ -92,23 +95,22 @@ private:
     void updatePosition();
 
 private:
-    QColor  _color;
-    qreal   _roundness; // 0..100
-    qreal   _minimumTrailOpacity;
-    qreal   _trailFadePercentage;
-    qreal   _revolutionsPerSecond;
-    int     _numberOfLines;
-    int     _lineLength;
-    int     _lineWidth;
-    int     _innerRadius;
+    QColor _color;
+    qreal _roundness; // 0..100
+    qreal _minimumTrailOpacity;
+    qreal _trailFadePercentage;
+    qreal _revolutionsPerSecond;
+    int _numberOfLines;
+    int _lineLength;
+    int _lineWidth;
+    int _innerRadius;
+    QString _text;
+    QSize _imageSize;
+    QColor _textColor;
 
-private:
-    WaitingSpinnerWidget(const WaitingSpinnerWidget&);
-    WaitingSpinnerWidget& operator=(const WaitingSpinnerWidget&);
-
-    QTimer *_timer;
-    bool    _centerOnParent;
-    bool    _disableParentWhenSpinning;
-    int     _currentCounter;
-    bool    _isSpinning;
+    QTimer* _timer;
+    bool _centerOnParent;
+    bool _disableParentWhenSpinning;
+    int _currentCounter;
+    bool _isSpinning;
 };
